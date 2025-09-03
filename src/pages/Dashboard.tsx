@@ -1,0 +1,167 @@
+import { MetricCard } from "@/components/MetricCard"
+import { StatusBadge } from "@/components/StatusBadge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Star, Package, Users, MapPin, TrendingUp, Award } from "lucide-react"
+
+// Mock data for demonstration
+const metrics = [
+  {
+    title: "Active Promotions",
+    value: 12,
+    description: "4 expiring this week",
+    icon: Star,
+    trend: { value: 8, isPositive: true }
+  },
+  {
+    title: "Total Offers",
+    value: 248,
+    description: "Across all provinces",
+    icon: Package,
+    trend: { value: 15, isPositive: true }
+  },
+  {
+    title: "Active Vendors",
+    value: 67,
+    description: "3 new this month",
+    icon: Users,
+    trend: { value: 5, isPositive: true }
+  },
+  {
+    title: "Total Claims",
+    value: "1,234",
+    description: "This month",
+    icon: TrendingUp,
+    trend: { value: 23, isPositive: true }
+  }
+]
+
+const recentPromotions = [
+  {
+    id: 1,
+    name: "Black Friday Special",
+    type: "standard",
+    status: "active" as const,
+    claims: 89,
+    color: "#2563eb"
+  },
+  {
+    id: 2,
+    name: "New Year Teaser",
+    type: "teaser",
+    status: "pending" as const,
+    claims: 12,
+    color: "#7c3aed"
+  },
+  {
+    id: 3,
+    name: "Holiday Bundle",
+    type: "standard", 
+    status: "active" as const,
+    claims: 156,
+    color: "#dc2626"
+  }
+]
+
+const topVendors = [
+  { name: "VendorCorp", claims: 234, province: "ON" },
+  { name: "RetailPlus", claims: 189, province: "BC" },
+  { name: "ShopMart", claims: 167, province: "AB" },
+  { name: "PromoLand", claims: 134, province: "QC" }
+]
+
+export default function Dashboard() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Overview of your promotions and marketing campaigns
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {metrics.map((metric, index) => (
+          <MetricCard key={index} {...metric} />
+        ))}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4 shadow-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5 text-primary" />
+              Recent Promotions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentPromotions.map((promo) => (
+                <div key={promo.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: promo.color }}
+                    />
+                    <div>
+                      <p className="font-medium">{promo.name}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant={promo.type === 'teaser' ? 'secondary' : 'outline'}>
+                          {promo.type}
+                        </Badge>
+                        <StatusBadge status={promo.status} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium">{promo.claims} claims</p>
+                    <p className="text-xs text-muted-foreground">this month</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-3 shadow-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-accent" />
+              Top Vendors
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {topVendors.map((vendor, index) => (
+                <div key={vendor.name} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-primary">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{vendor.name}</p>
+                      <p className="text-xs text-muted-foreground">{vendor.province}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium">{vendor.claims}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex gap-4">
+        <Button className="bg-gradient-primary shadow-primary">
+          <Star className="h-4 w-4 mr-2" />
+          Create Promotion
+        </Button>
+        <Button variant="outline">
+          <Package className="h-4 w-4 mr-2" />
+          Manage Offers
+        </Button>
+      </div>
+    </div>
+  )
+}
