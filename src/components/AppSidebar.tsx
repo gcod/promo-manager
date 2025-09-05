@@ -34,14 +34,14 @@ export function AppSidebar() {
 
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary text-primary-foreground font-medium" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+    isActive ? "bg-primary text-primary-foreground font-medium" : "text-foreground hover:bg-sidebar-accent hover:text-foreground"
 
   return (
     <Sidebar className={isCollapsed ? "w-14" : "w-60"} collapsible="icon">
       <SidebarContent>
         <div className="p-4 border-b border-sidebar-border">
           {!isCollapsed && (
-            <h2 className="text-lg font-semibold text-sidebar-foreground">
+            <h2 className="text-lg font-semibold text-foreground">
               PromoManager
             </h2>
           )}
