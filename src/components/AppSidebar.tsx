@@ -42,7 +42,7 @@ export function AppSidebar() {
         <div className="p-4 border-b border-sidebar-border">
           {!isCollapsed && (
             <h2 className="text-lg font-semibold text-foreground">
-              PromoManager
+              <img src="https://www.primevape.ca/cdn/shop/collections/vuse_vape_vaping_flavour.png?crop=center&height=1200&v=1731439440&width=1200" class="cmp-image__image" itemprop="contentUrl" alt="Vuse logo" data-desktop-altvalue="Vuse logo"></img>
             </h2>
           )}
         </div>
