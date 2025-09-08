@@ -35,40 +35,63 @@ import { Plus, Search, Filter, Package, Edit } from "lucide-react"
 const offers = [
   {
     id: 1,
-    promotion: "Black Friday Special",
-    price: "$29.99",
-    format: "UPC",
-    province: "ON",
-    vendor: "VendorCorp",
+    title: "CouponsOffer1-ProOne circlek ON",
+    price: 24.99,
+    promotion: { id: 1, name: "ProOne" },
+    province: { id: 1, name: "Ontario", code: "ON" },
+    vendor: { id: 1, name: "Circle K" },
     status: "active" as const,
-    hasImages: true,
+    images: ["image1.jpg", "image2.jpg", "image3.jpg"],
     createdAt: "2024-01-15"
   },
   {
     id: 2,
-    promotion: "Holiday Bundle",
-    price: "$15.50",
-    format: "Token",
-    province: "BC", 
-    vendor: "RetailPlus",
-    status: "active" as const,
-    hasImages: false,
+    title: "CouponsOffer2-Pods petro BC",
+    price: 11.00,
+    promotion: { id: 2, name: "Pods" },
+    province: { id: 2, name: "British Columbia", code: "BC" },
+    vendor: { id: 2, name: "Petro-Canada" },
+    status: "inactive" as const,
+    images: ["image1.jpg", null, null],
     createdAt: "2024-01-12"
   },
   {
     id: 3,
-    promotion: "New Year Teaser",
-    price: "$45.00",
-    format: "UPC",
-    province: "AB",
-    vendor: "ShopMart",
-    status: "inactive" as const,
-    hasImages: true,
+    title: "CouponsOffer3-Ultra parkland AB",
+    price: 29.99,
+    promotion: { id: 3, name: "Ultra" },
+    province: { id: 3, name: "Alberta", code: "AB" },
+    vendor: { id: 3, name: "Parkland" },
+    status: "active" as const,
+    images: ["image1.jpg", "image2.jpg", "image3.jpg"],
     createdAt: "2024-01-10"
   }
 ]
 
-const provinces = ["All Provinces", "ON", "BC", "AB", "QC", "MB", "SK", "NS", "NB", "NL", "PE", "NT", "NU", "YT"]
+const promotions = [
+  { id: 1, name: "ProOne" },
+  { id: 2, name: "Pods" },
+  { id: 3, name: "Ultra" },
+  { id: 4, name: "2x Ultra PODS" },
+  { id: 99, name: "Evergreen" }
+]
+
+const vendors = [
+  { id: 1, name: "Circle K" },
+  { id: 2, name: "Petro-Canada" },
+  { id: 3, name: "Shell" },
+  { id: 4, name: "Parkland" },
+  { id: 5, name: "711" }
+]
+
+const provinces = [
+  { id: 1, name: "Ontario", code: "ON" },
+  { id: 2, name: "British Columbia", code: "BC" },
+  { id: 3, name: "Alberta", code: "AB" },
+  { id: 4, name: "Quebec", code: "QC" }
+]
+
+const provinceFilterOptions = ["All Provinces", "ON", "BC", "AB", "QC", "MB", "SK", "NS", "NB", "NL", "PE", "NT", "NU", "YT"]
 const statuses = ["All Status", "Active", "Inactive"]
 
 export default function Offers() {
@@ -78,20 +101,24 @@ export default function Offers() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingOffer, setEditingOffer] = useState<any>(null)
   const [formData, setFormData] = useState({
-    promotion: "",
+    title: "",
     price: "",
-    format: "UPC",
-    province: "",
-    vendor: "",
+    promotionId: "",
+    provinceId: "",
+    vendorId: "",
     status: true,
     description: "",
-    termsConditions: ""
+    termsConditions: "",
+    image1: "",
+    image2: "",
+    image3: ""
   })
 
   const filteredOffers = offers.filter(offer => {
-    const matchesSearch = offer.promotion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         offer.vendor.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesProvince = selectedProvince === "All Provinces" || offer.province === selectedProvince
+    const matchesSearch = offer.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         offer.promotion.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         offer.vendor.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesProvince = selectedProvince === "All Provinces" || offer.province.code === selectedProvince
     const matchesStatus = selectedStatus === "All Status" || 
                          (selectedStatus === "Active" && offer.status === "active") ||
                          (selectedStatus === "Inactive" && offer.status === "inactive")
@@ -102,14 +129,17 @@ export default function Offers() {
   const handleCreateOffer = () => {
     setEditingOffer(null)
     setFormData({
-      promotion: "",
+      title: "",
       price: "",
-      format: "UPC",
-      province: "",
-      vendor: "",
+      promotionId: "",
+      provinceId: "",
+      vendorId: "",
       status: true,
       description: "",
-      termsConditions: ""
+      termsConditions: "",
+      image1: "",
+      image2: "",
+      image3: ""
     })
     setIsDialogOpen(true)
   }
@@ -117,14 +147,17 @@ export default function Offers() {
   const handleEditOffer = (offer: any) => {
     setEditingOffer(offer)
     setFormData({
-      promotion: offer.promotion,
-      price: offer.price,
-      format: offer.format,
-      province: offer.province,
-      vendor: offer.vendor,
+      title: offer.title,
+      price: offer.price.toString(),
+      promotionId: offer.promotion.id.toString(),
+      provinceId: offer.province.id.toString(),
+      vendorId: offer.vendor.id.toString(),
       status: offer.status === "active",
       description: "",
-      termsConditions: ""
+      termsConditions: "",
+      image1: offer.images[0] || "",
+      image2: offer.images[1] || "",
+      image3: offer.images[2] || ""
     })
     setIsDialogOpen(true)
   }
@@ -158,51 +191,68 @@ export default function Offers() {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Offer Title</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  placeholder="Enter offer title"
+                  required
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="promotion">Promotion</Label>
-                  <Input
-                    id="promotion"
-                    value={formData.promotion}
-                    onChange={(e) => setFormData({...formData, promotion: e.target.value})}
-                    placeholder="Enter promotion name"
-                    required
-                  />
-                </div>
                 <div className="space-y-2">
                   <Label htmlFor="price">Price</Label>
                   <Input
                     id="price"
+                    type="number"
+                    step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    placeholder="$0.00"
+                    placeholder="0.00"
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="promotion">Promotion</Label>
+                  <Select value={formData.promotionId} onValueChange={(value) => setFormData({...formData, promotionId: value})} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select promotion" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {promotions.map(promotion => (
+                        <SelectItem key={promotion.id} value={promotion.id.toString()}>{promotion.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="format">Format</Label>
-                  <Select value={formData.format} onValueChange={(value) => setFormData({...formData, format: value})}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="UPC">UPC</SelectItem>
-                      <SelectItem value="Token">Token</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="province">Province</Label>
-                  <Select value={formData.province} onValueChange={(value) => setFormData({...formData, province: value})} required>
+                  <Select value={formData.provinceId} onValueChange={(value) => setFormData({...formData, provinceId: value})} required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select province" />
                     </SelectTrigger>
                     <SelectContent>
-                      {provinces.filter(p => p !== "All Provinces").map(province => (
-                        <SelectItem key={province} value={province}>{province}</SelectItem>
+                      {provinces.map(province => (
+                        <SelectItem key={province.id} value={province.id.toString()}>{province.name} ({province.code})</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="vendor">Vendor</Label>
+                  <Select value={formData.vendorId} onValueChange={(value) => setFormData({...formData, vendorId: value})} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select vendor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {vendors.map(vendor => (
+                        <SelectItem key={vendor.id} value={vendor.id.toString()}>{vendor.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -210,14 +260,39 @@ export default function Offers() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="vendor">Vendor</Label>
-                <Input
-                  id="vendor"
-                  value={formData.vendor}
-                  onChange={(e) => setFormData({...formData, vendor: e.target.value})}
-                  placeholder="Enter vendor name"
-                  required
-                />
+                <Label>Images (3 required)</Label>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="image1">Image 1</Label>
+                    <Input
+                      id="image1"
+                      value={formData.image1}
+                      onChange={(e) => setFormData({...formData, image1: e.target.value})}
+                      placeholder="Image URL"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="image2">Image 2</Label>
+                    <Input
+                      id="image2"
+                      value={formData.image2}
+                      onChange={(e) => setFormData({...formData, image2: e.target.value})}
+                      placeholder="Image URL"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="image3">Image 3</Label>
+                    <Input
+                      id="image3"
+                      value={formData.image3}
+                      onChange={(e) => setFormData({...formData, image3: e.target.value})}
+                      placeholder="Image URL"
+                      required
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -286,7 +361,7 @@ export default function Offers() {
                 <SelectValue placeholder="Filter by province" />
               </SelectTrigger>
               <SelectContent>
-                {provinces.map(province => (
+                {provinceFilterOptions.map(province => (
                   <SelectItem key={province} value={province}>{province}</SelectItem>
                 ))}
               </SelectContent>
@@ -307,11 +382,12 @@ export default function Offers() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Promotion</TableHead>
+                <TableHead>Title</TableHead>
                 <TableHead>Price</TableHead>
-                <TableHead>Format</TableHead>
+                <TableHead>Promotion</TableHead>
                 <TableHead>Province</TableHead>
                 <TableHead>Vendor</TableHead>
+                <TableHead>Images</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Actions</TableHead>
@@ -320,17 +396,24 @@ export default function Offers() {
             <TableBody>
               {filteredOffers.map((offer) => (
                 <TableRow key={offer.id}>
-                  <TableCell className="font-medium">{offer.promotion}</TableCell>
-                  <TableCell className="font-mono text-success">{offer.price}</TableCell>
+                  <TableCell className="font-medium">{offer.title}</TableCell>
+                  <TableCell className="font-mono text-success">${offer.price.toFixed(2)}</TableCell>
                   <TableCell>
-                    <Badge variant={offer.format === 'UPC' ? 'outline' : 'secondary'}>
-                      {offer.format}
-                    </Badge>
+                    <Badge variant="outline">{offer.promotion.name}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{offer.province}</Badge>
+                    <Badge variant="outline">{offer.province.code}</Badge>
                   </TableCell>
-                  <TableCell>{offer.vendor}</TableCell>
+                  <TableCell>{offer.vendor.name}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {offer.images.map((image, index) => (
+                        <div key={index} className="w-6 h-6 bg-muted rounded flex items-center justify-center text-xs">
+                          {image ? '✓' : '✗'}
+                        </div>
+                      ))}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <StatusBadge status={offer.status} />
                   </TableCell>

@@ -28,7 +28,7 @@ const vendors = [
   {
     id: 1,
     code: "VCORP001",
-    name: "VendorCorp",
+    name: "Circle K",
     status: "active" as const,
     totalOffers: 23,
     provinces: ["ON", "BC"],
@@ -37,7 +37,7 @@ const vendors = [
   {
     id: 2,
     code: "RPLUS002",
-    name: "RetailPlus",
+    name: "Petro-Canada",
     status: "active" as const,
     totalOffers: 18,
     provinces: ["BC", "AB"],
@@ -46,7 +46,7 @@ const vendors = [
   {
     id: 3,
     code: "SHOP003",
-    name: "ShopMart",
+    name: "Shell",
     status: "inactive" as const,
     totalOffers: 12,
     provinces: ["AB", "SK"],
@@ -55,11 +55,20 @@ const vendors = [
   {
     id: 4,
     code: "PROMO004",
-    name: "PromoLand",
+    name: "Parkland",
     status: "active" as const,
     totalOffers: 31,
     provinces: ["QC", "ON"],
     createdAt: "2024-01-05"
+  },
+  {
+    id: 5,
+    code: "SHOP003",
+    name: "711",
+    status: "inactive" as const,
+    totalOffers: 12,
+    provinces: ["AB", "SK"],
+    createdAt: "2024-01-08"
   }
 ]
 

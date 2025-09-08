@@ -10,6 +10,7 @@ import Offers from "./pages/Offers";
 import Vendors from "./pages/Vendors";
 import Provinces from "./pages/Provinces";
 import Analytics from "./pages/Analytics";
+import VendorStats from "./pages/VendorStats";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/vendors" element={<Vendors />} />
             <Route path="/provinces" element={<Provinces />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/vendor-stats" element={<VendorStats />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

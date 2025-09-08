@@ -14,21 +14,14 @@ import { TrendingUp, Users, MapPin, Award, Calendar } from "lucide-react"
 const analyticsMetrics = [
   {
     title: "Total Claims",
-    value: "2,467",
+    value: "9,523",
     description: "Last 30 days",
     icon: TrendingUp,
     trend: { value: 12, isPositive: true }
   },
   {
-    title: "Conversion Rate",
-    value: "3.2%",
-    description: "Offers to claims",
-    icon: Award,
-    trend: { value: 0.3, isPositive: true }
-  },
-  {
     title: "Active Users",
-    value: "1,234",
+    value: "3,234",
     description: "Monthly active",
     icon: Users,
     trend: { value: 8, isPositive: true }
@@ -38,28 +31,35 @@ const analyticsMetrics = [
     value: "Ontario",
     description: "45% of claims",
     icon: MapPin
+  },
+  {
+    title: "Top vendor claims",
+    value: "Circle K",
+    description: "22% of claims",
+    icon: Award
   }
 ]
 
 const topPromotions = [
-  { name: "Black Friday Special", claims: 456, conversion: "4.2%" },
-  { name: "Holiday Bundle", claims: 389, conversion: "3.8%" },
-  { name: "New Year Teaser", claims: 234, conversion: "2.9%" },
-  { name: "Summer Sale", claims: 189, conversion: "2.1%" }
+  { name: "ProOne", claims: 5684, conversion: "50.2%" },
+  { name: "Pods", claims: 3326, conversion: "30.8%" },
+  { name: "Ultra", claims: 588, conversion: "5.8%" },
+  { name: "2x Ultra PODS", claims: 221, conversion: "3.8%" },
+  { name: "Evergreen", claims: 25, conversion: "2.1%" }
 ]
 
 const provinceData = [
-  { province: "Ontario", code: "ON", claims: 892, percentage: 45 },
-  { province: "British Columbia", code: "BC", claims: 634, percentage: 32 },
-  { province: "Alberta", code: "AB", claims: 289, percentage: 15 },
-  { province: "Quebec", code: "QC", claims: 156, percentage: 8 }
+  { province: "Ontario", code: "ON", claims: "4,285", percentage: 45 },
+  { province: "British Columbia", code: "BC", claims: "3,047", percentage: 32 },
+  { province: "Alberta", code: "AB", claims: "1,428", percentage: 15 },
+  { province: "Manitoba", code: "MB", claims: "762", percentage: 8 }
 ]
 
 const ageGroups = [
-  { group: "18-25", percentage: 28, users: 342 },
-  { group: "26-35", percentage: 35, users: 467 },
-  { group: "36-45", percentage: 22, users: 289 },
-  { group: "46+", percentage: 15, users: 198 }
+  { group: "18-25", percentage: 28, users: 905 },
+  { group: "26-35", percentage: 35, users: 1234 },
+  { group: "36-45", percentage: 22, users: 892 },
+  { group: "46+", percentage: 15, users: 568 }
 ]
 
 export default function Analytics() {

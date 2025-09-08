@@ -9,28 +9,28 @@ import { Star, Package, Users, MapPin, TrendingUp, Award } from "lucide-react"
 const metrics = [
   {
     title: "Active Promotions",
-    value: 12,
-    description: "4 expiring this week",
+    value: 4,
+    description: "1 inactive",
     icon: Star,
     trend: { value: 8, isPositive: true }
   },
   {
     title: "Total Offers",
-    value: 248,
+    value: 124,
     description: "Across all provinces",
     icon: Package,
     trend: { value: 15, isPositive: true }
   },
   {
     title: "Active Vendors",
-    value: 67,
+    value: 5,
     description: "3 new this month",
     icon: Users,
     trend: { value: 5, isPositive: true }
   },
   {
     title: "Total Claims",
-    value: "1,234",
+    value: "9,523",
     description: "This month",
     icon: TrendingUp,
     trend: { value: 23, isPositive: true }
@@ -40,35 +40,43 @@ const metrics = [
 const recentPromotions = [
   {
     id: 1,
-    name: "Black Friday Special",
-    type: "standard",
+    name: "ProOne",
+    type: "teaser",
     status: "active" as const,
-    claims: 89,
+    claims: 5684,
     color: "#2563eb"
   },
   {
     id: 2,
-    name: "New Year Teaser",
-    type: "teaser",
-    status: "pending" as const,
-    claims: 12,
+    name: "Pods",
+    type: "standard",
+    status: "active" as const,
+    claims: 3226,
     color: "#7c3aed"
   },
   {
     id: 3,
-    name: "Holiday Bundle",
+    name: "Ultra",
     type: "standard", 
     status: "active" as const,
-    claims: 156,
+    claims: 588,
     color: "#dc2626"
+  },
+  {
+    id: 4,
+    name: "Evergreen",
+    type: "standard",
+    status: "active" as const,
+    claims: 25,
+    color: "#7c3aed"
   }
 ]
 
 const topVendors = [
-  { name: "VendorCorp", claims: 234, province: "ON" },
-  { name: "RetailPlus", claims: 189, province: "BC" },
-  { name: "ShopMart", claims: 167, province: "AB" },
-  { name: "PromoLand", claims: 134, province: "QC" }
+  { name: "Circle K", claims: 234, province: "ON" },
+  { name: "Petro-Canada", claims: 189, province: "BC" },
+  { name: "Shell", claims: 167, province: "AB" },
+  { name: "Parkland", claims: 134, province: "MB" }
 ]
 
 export default function Dashboard() {

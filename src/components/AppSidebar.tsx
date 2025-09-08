@@ -24,6 +24,7 @@ const adminItems = [
 
 const analyticsItems = [
   { title: "Analytics", url: "/analytics", icon: TrendingUp },
+  { title: "Vendor Stats", url: "/vendor-stats", icon: BarChart3 },
 ]
 
 export function AppSidebar() {
@@ -34,16 +35,16 @@ export function AppSidebar() {
 
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary text-primary-foreground font-medium" : "text-foreground hover:bg-sidebar-accent hover:text-foreground"
+    isActive ? "bg-primary font-medium" : "text-foreground hover:bg-sidebar-accent hover:text-foreground"
 
   return (
     <Sidebar className={isCollapsed ? "w-14" : "w-60"} collapsible="icon">
       <SidebarContent>
         <div className="p-4 border-b border-sidebar-border">
           {!isCollapsed && (
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-foreground text-center">
               <img src="https://www.primevape.ca/cdn/shop/collections/vuse_vape_vaping_flavour.png?crop=center&height=1200&v=1731439440&width=1200" class="cmp-image__image" itemprop="contentUrl" alt="Vuse logo" data-desktop-altvalue="Vuse logo"></img>
-            </h2>
+            ReadyScan</h2>
           )}
         </div>
         

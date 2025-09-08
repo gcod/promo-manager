@@ -58,42 +58,6 @@ export type Database = {
           },
         ]
       }
-      offer_vendors: {
-        Row: {
-          created_at: string | null
-          id: string
-          offer_id: string
-          vendor_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          offer_id: string
-          vendor_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          offer_id?: string
-          vendor_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "offer_vendors_offer_id_fkey"
-            columns: ["offer_id"]
-            isOneToOne: false
-            referencedRelation: "offers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "offer_vendors_vendor_id_fkey"
-            columns: ["vendor_id"]
-            isOneToOne: false
-            referencedRelation: "vendors"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       offers: {
         Row: {
           created_at: string | null
@@ -101,13 +65,18 @@ export type Database = {
           current_claims: number | null
           description: string | null
           id: string
+          image_1: string | null
+          image_2: string | null
+          image_3: string | null
           is_active: boolean | null
           max_claims: number | null
+          price: number | null
           promotion_id: string
-          province: string
+          province_id: string
           terms_conditions: string | null
           title: string
           updated_at: string | null
+          vendor_id: string
         }
         Insert: {
           created_at?: string | null
@@ -115,13 +84,18 @@ export type Database = {
           current_claims?: number | null
           description?: string | null
           id?: string
+          image_1?: string | null
+          image_2?: string | null
+          image_3?: string | null
           is_active?: boolean | null
           max_claims?: number | null
+          price?: number | null
           promotion_id: string
-          province: string
+          province_id: string
           terms_conditions?: string | null
           title: string
           updated_at?: string | null
+          vendor_id: string
         }
         Update: {
           created_at?: string | null
@@ -129,13 +103,18 @@ export type Database = {
           current_claims?: number | null
           description?: string | null
           id?: string
+          image_1?: string | null
+          image_2?: string | null
+          image_3?: string | null
           is_active?: boolean | null
           max_claims?: number | null
+          price?: number | null
           promotion_id?: string
-          province?: string
+          province_id?: string
           terms_conditions?: string | null
           title?: string
           updated_at?: string | null
+          vendor_id?: string
         }
         Relationships: [
           {
@@ -152,7 +131,48 @@ export type Database = {
             referencedRelation: "promotions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "offers_province_id_fkey"
+            columns: ["province_id"]
+            isOneToOne: false
+            referencedRelation: "provinces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offers_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      provinces: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          legal_age: number
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          legal_age: number
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          legal_age?: number
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       promotions: {
         Row: {

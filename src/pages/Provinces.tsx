@@ -64,9 +64,9 @@ const provinces = [
   },
   {
     id: 4,
-    code: "QC",
-    name: "Quebec",
-    status: "inactive" as const,
+    code: "MB",
+    name: "Manitoba",
+    status: "active" as const,
     legalAge: 18,
     totalOffers: 23,
     totalClaims: 321,

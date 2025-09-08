@@ -32,42 +32,80 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Plus, Search, Edit, Trash2, Star } from "lucide-react"
 
+// Types
+type Promotion = {
+  id: number
+  name: string
+  type: string
+  description: string
+  color: string
+  shortCopy: string
+  priority: number
+  status: "active" | "inactive"
+  claims: number
+  createdAt: string
+}
+
 // Mock data
 const promotions = [
   {
     id: 1,
-    name: "Black Friday Special",
-    type: "standard",
-    description: "Exclusive Black Friday deals for all customers",
-    color: "#2563eb",
-    shortCopy: "Save big on Black Friday!",
+    name: "ProOne",
+    type: "teaser",
+    description: "GET $24.99 OFF* VUSE PRO ONE READY-TO-VAPE KIT + 1 PACK OF VUSE PODS",
+    color: "#031D30",
+    shortCopy: "one (1) Vuse Pro One and one (1) Vuse Pod",
     priority: 1,
     status: "active" as const,
-    claims: 89,
+    claims: 5684,
     createdAt: "2024-01-15"
   },
   {
     id: 2,
-    name: "New Year Teaser",
-    type: "teaser",
-    description: "Get ready for amazing New Year promotions",
+    name: "Pods",
+    type: "standard",
+    description: "GET $11 OFF* two packs of vuse pods",
     color: "#7c3aed",
-    shortCopy: "Something big is coming...",
+    shortCopy: "two (2) packs of Vuse Pods",
     priority: 2,
-    status: "pending" as const,
-    claims: 12,
+    status: "active" as const,
+    claims: 3226,
     createdAt: "2024-01-10"
   },
   {
     id: 3,
-    name: "Holiday Bundle",
+    name: "Ultra",
     type: "standard",
-    description: "Special holiday package deals",
+    description: "GET $29.99 OFF* VUSE ULTRA + 1 PACK OF VUSE ULTRA PODS",
     color: "#dc2626",
-    shortCopy: "Holiday magic awaits!",
-    priority: 1,
+    shortCopy: "one (1) Vuse Ultra device and one (1) pack of Vuse Ultra Pods",
+    priority: 3,
+    status: "active" as const,
+    claims: 588,
+    createdAt: "2024-01-08"
+  },
+  {
+    id: 4,
+    name: "2x Ultra PODS",
+    type: "standard",
+    description: "GET $9.99 OFF* 2 PACK OF VUSE ULTRA PODS",
+    color: "#dc2626",
+    shortCopy: "two (2) pack of Vuse Ultra Pods",
+    priority: 4,
     status: "inactive" as const,
-    claims: 156,
+    claims: 588,
+    createdAt: "2024-01-08"
+  },
+  {
+    id: 99,
+    name: "Evergreen",
+    type: "standard",
+    description: "-",
+    color: "#dc2626",
+    shortCopy: "-",
+    priority: 99,
+    status: "active" as const,
+    claims: 25,
     createdAt: "2024-01-08"
   }
 ]
@@ -75,11 +113,57 @@ const promotions = [
 export default function Promotions() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null)
+  const [formData, setFormData] = useState({
+    name: "",
+    type: "standard",
+    description: "",
+    shortCopy: "",
+    color: "#2563eb",
+    priority: "1",
+    status: true
+  })
 
   const filteredPromotions = promotions.filter(promo => 
     promo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     promo.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const handleCreatePromotion = () => {
+    setEditingPromotion(null)
+    setFormData({
+      name: "",
+      type: "standard",
+      description: "",
+      shortCopy: "",
+      color: "#2563eb",
+      priority: "1",
+      status: true
+    })
+    setIsCreateOpen(true)
+  }
+
+  const handleEditPromotion = (promotion: Promotion) => {
+    setEditingPromotion(promotion)
+    setFormData({
+      name: promotion.name,
+      type: promotion.type,
+      description: promotion.description,
+      shortCopy: promotion.shortCopy,
+      color: promotion.color,
+      priority: promotion.priority.toString(),
+      status: promotion.status === "active"
+    })
+    setIsEditOpen(true)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log(editingPromotion ? "Updating promotion:" : "Creating promotion:", formData)
+    setIsCreateOpen(false)
+    setIsEditOpen(false)
+  }
 
   return (
     <div className="space-y-6">
@@ -92,7 +176,7 @@ export default function Promotions() {
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-primary shadow-primary">
+            <Button onClick={handleCreatePromotion} className="bg-gradient-primary shadow-primary">
               <Plus className="h-4 w-4 mr-2" />
               Create Promotion
             </Button>
@@ -104,61 +188,184 @@ export default function Promotions() {
                 Add a new promotion to your marketing campaigns
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Promotion Name</Label>
-                <Input id="name" placeholder="Enter promotion name" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="type">Type</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="standard">Standard</SelectItem>
-                    <SelectItem value="teaser">Teaser</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea id="description" placeholder="Describe your promotion" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="shortCopy">Short Copy</Label>
-                <Input id="shortCopy" placeholder="Brief promotional text" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="color">Color (Hex)</Label>
-                  <Input id="color" placeholder="#2563eb" />
+                  <Label htmlFor="name">Promotion Name</Label>
+                  <Input 
+                    id="name" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Enter promotion name" 
+                    required
+                  />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="priority">Priority</Label>
-                  <Select>
+                  <Label htmlFor="type">Type</Label>
+                  <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select priority" />
+                      <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">High (1)</SelectItem>
-                      <SelectItem value="2">Medium (2)</SelectItem>
-                      <SelectItem value="3">Low (3)</SelectItem>
+                      <SelectItem value="standard">Standard</SelectItem>
+                      <SelectItem value="teaser">Teaser</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea 
+                    id="description" 
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    placeholder="Describe your promotion" 
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="shortCopy">Short Copy</Label>
+                  <Input 
+                    id="shortCopy" 
+                    value={formData.shortCopy}
+                    onChange={(e) => setFormData({...formData, shortCopy: e.target.value})}
+                    placeholder="Brief promotional text" 
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="color">Color (Hex)</Label>
+                    <Input 
+                      id="color" 
+                      value={formData.color}
+                      onChange={(e) => setFormData({...formData, color: e.target.value})}
+                      placeholder="#2563eb" 
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="priority">Priority</Label>
+                    <Select value={formData.priority} onValueChange={(value) => setFormData({...formData, priority: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">(1)</SelectItem>
+                        <SelectItem value="2">(2)</SelectItem>
+                        <SelectItem value="3">(3)</SelectItem>
+                        <SelectItem value="4">(4)</SelectItem>
+                        <SelectItem value="99">(99)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="active" 
+                    checked={formData.status}
+                    onCheckedChange={(checked) => setFormData({...formData, status: checked})}
+                  />
+                  <Label htmlFor="active">Active</Label>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Switch id="active" />
-                <Label htmlFor="active">Active</Label>
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-gradient-primary">Create Promotion</Button>
               </div>
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-                Cancel
-              </Button>
-              <Button className="bg-gradient-primary">Create Promotion</Button>
-            </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Edit Promotion</DialogTitle>
+              <DialogDescription>
+                Update the promotion details
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-name">Promotion Name</Label>
+                  <Input 
+                    id="edit-name" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="Enter promotion name" 
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-type">Type</Label>
+                  <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="standard">Standard</SelectItem>
+                      <SelectItem value="teaser">Teaser</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Textarea 
+                    id="edit-description" 
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    placeholder="Describe your promotion" 
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="edit-shortCopy">Short Copy</Label>
+                  <Input 
+                    id="edit-shortCopy" 
+                    value={formData.shortCopy}
+                    onChange={(e) => setFormData({...formData, shortCopy: e.target.value})}
+                    placeholder="Brief promotional text" 
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="edit-color">Color (Hex)</Label>
+                    <Input 
+                      id="edit-color" 
+                      value={formData.color}
+                      onChange={(e) => setFormData({...formData, color: e.target.value})}
+                      placeholder="#2563eb" 
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="edit-priority">Priority</Label>
+                    <Select value={formData.priority} onValueChange={(value) => setFormData({...formData, priority: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">High (1)</SelectItem>
+                        <SelectItem value="2">Medium (2)</SelectItem>
+                        <SelectItem value="3">Low (3)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="edit-active" 
+                    checked={formData.status}
+                    onCheckedChange={(checked) => setFormData({...formData, status: checked})}
+                  />
+                  <Label htmlFor="edit-active">Active</Label>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-gradient-primary">Update Promotion</Button>
+              </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -226,7 +433,11 @@ export default function Promotions() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="ghost">
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleEditPromotion(promotion)}
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
                       {promotion.status === 'inactive' && (
