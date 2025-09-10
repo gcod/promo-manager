@@ -9,7 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ArrowLeft, PieChart, Users, TrendingUp } from "lucide-react"
+import { ArrowLeft, PieChart, Users, TrendingUp, MapPin } from "lucide-react"
+import { CanadaMap } from "@/components/CanadaMap"
+import { vendorMapData } from "@/data/vendorMapData"
 
 // Types
 type Province = {
@@ -693,6 +695,22 @@ export default function VendorStats() {
            </CardContent>
          </Card>
       </div>
+
+      {/* Vendor Distribution Map */}
+      <Card className="shadow-card overflow-visible">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-primary" />
+            Vendor Distribution Map
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Interactive map showing vendor locations across Canada. Point size represents claim volume.
+          </p>
+        </CardHeader>
+        <CardContent className="p-0">
+          <CanadaMap vendors={vendorMapData} />
+        </CardContent>
+      </Card>
     </div>
   )
 }

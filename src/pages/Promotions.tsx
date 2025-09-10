@@ -30,7 +30,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Plus, Search, Edit, Trash2, Star } from "lucide-react"
+import { Plus, Search, Edit, Trash2, Star, ImageOff } from "lucide-react"
 
 // Types
 type Promotion = {
@@ -109,6 +109,44 @@ const promotions = [
     createdAt: "2024-01-08"
   }
 ]
+
+// Map promotion names to image paths in public/img
+const promotionImageMap: Record<string, string> = {
+  ProOne: "/img/CouponsOffer1-ProOne-product_image.png",
+  Pods: "/img/CouponsOffer2-Pods-product_image.png",
+  Ultra: "/img/CouponsOffer3-Ultra-product_image.png",
+}
+
+function PromoImage({ src, alt }: { src?: string; alt: string }) {
+  const [currentSrc, setCurrentSrc] = useState<string | undefined>(src)
+  const [triedRootFallback, setTriedRootFallback] = useState(false)
+  const [error, setError] = useState(false)
+
+  if (!currentSrc || error) {
+    return (
+      <div className="h-12 w-12 rounded-md bg-muted flex items-center justify-center border">
+        <ImageOff className="h-5 w-5 text-muted-foreground" />
+      </div>
+    )
+  }
+
+  return (
+    <img
+      src={currentSrc}
+      alt={alt}
+      className="h-12 w-12 rounded-md object-cover border"
+      onError={() => {
+        if (!triedRootFallback && currentSrc.startsWith('/img/')) {
+          setCurrentSrc(currentSrc.replace('/img/', '/'))
+          setTriedRootFallback(true)
+        } else {
+          setError(true)
+        }
+      }}
+      loading="lazy"
+    />
+  )
+}
 
 export default function Promotions() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -406,6 +444,7 @@ export default function Promotions() {
                 <TableRow key={promotion.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
+                      <PromoImage src={promotionImageMap[promotion.name]} alt={promotion.name} />
                       <div
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: promotion.color }}
